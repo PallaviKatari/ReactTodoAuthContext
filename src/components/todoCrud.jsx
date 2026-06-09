@@ -12,8 +12,13 @@ import { AuthContext } from "../auth/AuthContext";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import "../Styles/todoCrud.css";
+import Navbar from "./Navbar";
 
 const TodoCrud = () => {
+  const userName = localStorage.getItem("userName");
+
+  const role = localStorage.getItem("role");
+
   // create a state variable for todos
   const [todos, setTodos] = useState([]);
   // create a state variable for new todo
@@ -98,12 +103,16 @@ const TodoCrud = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h1 className="mb-4">Todo CRUD</h1>
-      <button onClick={handleLogout} className="btn btn-danger">
-        Logout
-      </button>
-      {/* Loader
+    <>
+      <Navbar />
+      <div className="container mt-5">
+        <h1 className="mb-4">Todo CRUD</h1>
+        <p>User: {userName}</p>
+        <p>Role: {role}</p>
+        <button onClick={handleLogout} className="btn btn-danger">
+          Logout
+        </button>
+        {/* Loader
       {loading && (
         <div className="text-center my-3">
           <div className="spinner-border text-primary" role="status">
@@ -112,125 +121,128 @@ const TodoCrud = () => {
         </div>
       )} */}
 
-      {loading && (
-        <div className="text-center my-3">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRW3Rlc7xaKXDRc67zoXeoNbzQRgd8-nsq6dA&s" // paste Google image link here
-            alt="Loading..."
-            className="loader-img"
-            width="50"
-          />
-          <p>Loading, please wait...</p>
+        {loading && (
+          <div className="text-center my-3">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRW3Rlc7xaKXDRc67zoXeoNbzQRgd8-nsq6dA&s" // paste Google image link here
+              alt="Loading..."
+              className="loader-img"
+              width="50"
+            />
+            <p>Loading, please wait...</p>
+          </div>
+        )}
+
+        {/* Add Todo */}
+        <div className="row mb-3">
+          <div className="col-md-8">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter Todo"
+              value={newTodo.title}
+              onChange={(e) =>
+                setNewTodo({ ...newTodo, title: e.target.value })
+              }
+            />
+          </div>
+          <div className="col-md-4">
+            <button className="btn btn-primary w-100" onClick={handleCreate}>
+              Add Todo
+            </button>
+          </div>
         </div>
-      )}
 
-      {/* Add Todo */}
-      <div className="row mb-3">
-        <div className="col-md-8">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Enter Todo"
-            value={newTodo.title}
-            onChange={(e) => setNewTodo({ ...newTodo, title: e.target.value })}
-          />
-        </div>
-        <div className="col-md-4">
-          <button className="btn btn-primary w-100" onClick={handleCreate}>
-            Add Todo
-          </button>
-        </div>
-      </div>
-
-      {/* Todo List */}
-      <table className="table table-bordered table-striped">
-        <thead className="table-dark">
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Status</th>
-            <th width="250">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {todos.map((todo) => (
-            <tr key={todo.id}>
-              <td>{todo.id}</td>
-
-              <td>
-                {editingTodo?.id === todo.id ? (
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={editingTodo.title}
-                    onChange={(e) =>
-                      setEditingTodo({
-                        ...editingTodo,
-                        title: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  todo.title
-                )}
-              </td>
-
-              <td>
-                {todo.completed ? (
-                  <span className="badge bg-success">Completed</span>
-                ) : (
-                  <span className="badge bg-warning text-dark">Pending</span>
-                )}
-              </td>
-
-              <td>
-                {editingTodo?.id === todo.id ? (
-                  <>
-                    <button
-                      className="btn btn-success btn-sm me-2"
-                      onClick={() => handleUpdate(todo.id)}
-                    >
-                      Save
-                    </button>
-
-                    <button
-                      className="btn btn-secondary btn-sm"
-                      onClick={() => setEditingTodo(null)}
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className="btn btn-warning btn-sm me-2"
-                      onClick={() => setEditingTodo(todo)}
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleDelete(todo.id)}
-                    >
-                      Delete
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-
-          {todos.length === 0 && (
+        {/* Todo List */}
+        <table className="table table-bordered table-striped">
+          <thead className="table-dark">
             <tr>
-              <td colSpan="4" className="text-center">
-                No Todos Found
-              </td>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th width="250">Actions</th>
             </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {todos.map((todo) => (
+              <tr key={todo.id}>
+                <td>{todo.id}</td>
+
+                <td>
+                  {editingTodo?.id === todo.id ? (
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={editingTodo.title}
+                      onChange={(e) =>
+                        setEditingTodo({
+                          ...editingTodo,
+                          title: e.target.value,
+                        })
+                      }
+                    />
+                  ) : (
+                    todo.title
+                  )}
+                </td>
+
+                <td>
+                  {todo.completed ? (
+                    <span className="badge bg-success">Completed</span>
+                  ) : (
+                    <span className="badge bg-warning text-dark">Pending</span>
+                  )}
+                </td>
+
+                <td>
+                  {editingTodo?.id === todo.id ? (
+                    <>
+                      <button
+                        className="btn btn-success btn-sm me-2"
+                        onClick={() => handleUpdate(todo.id)}
+                      >
+                        Save
+                      </button>
+
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => setEditingTodo(null)}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="btn btn-warning btn-sm me-2"
+                        onClick={() => setEditingTodo(todo)}
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(todo.id)}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
+
+            {todos.length === 0 && (
+              <tr>
+                <td colSpan="4" className="text-center">
+                  No Todos Found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 
