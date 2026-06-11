@@ -8,7 +8,7 @@ function UserDashboard() {
       <Navbar />
 
       <div className="container mt-4">
-        <OnlineUsers />
+        {/* <OnlineUsers /> */}
 
         <div className="card shadow p-4">
           <h2>User Dashboard</h2>
